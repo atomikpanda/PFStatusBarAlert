@@ -21,10 +21,10 @@ static void statusbar_got_notification(CFNotificationCenterRef center, void *obs
  self.message = message;
 
  if (notification)
-  _notification = [notification copy];
+  self.notification = notification;
 
- _action = action;
- _target = target;
+ self.action = action;
+ self.target = target;
 
  if (self.notification)
  {
@@ -95,6 +95,7 @@ static void statusbar_got_notification(CFNotificationCenterRef center, void *obs
 {
   self.message = nil;
   self.statusBarOverlay = nil;
+  self.target = nil;
 
   if (_notification)
     [_notification release];
