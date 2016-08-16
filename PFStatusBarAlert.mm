@@ -21,7 +21,7 @@ static void statusbar_got_notification(CFNotificationCenterRef center, void *obs
  self.message = message;
 
  if (notification)
-  self.notification = notification;
+  _notification = [notification copy];
 
  self.action = action;
  self.target = target;
