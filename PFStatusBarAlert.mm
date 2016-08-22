@@ -3,6 +3,10 @@
 
 #import "PFStatusBarAlert.h"
 
+@interface UIApplication ()
+- (CGRect)statusBarFrameForOrientation:(long long)ori;
+@end
+
 static void statusbar_got_notification(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo )
 {
     if (observer)
@@ -32,13 +36,16 @@ static void statusbar_got_notification(CFNotificationCenterRef center, void *obs
   (CFStringRef)self.notification, NULL, CFNotificationSuspensionBehaviorCoalesce);
  }
 
- self.statusBarOverlay = [[UIWindow alloc] initWithFrame:[[UIApplication sharedApplication] statusBarFrame]];
+ self.statusBarOverlay = [[UIWindow alloc] initWithFrame:[[[UIApplication sharedApplication] keyWindow] bounds]];
  self.statusBarOverlay.alpha = 0.0f;
 
- self.actionButton = [[UIButton alloc] initWithFrame:self.statusBarOverlay.frame];
+ self.actionButton = [[UIButton alloc] initWithFrame:[[[UIApplication sharedApplication] keyWindow] bounds]];
  if (self.target && self.action)
   [self.actionButton addTarget:self.target action:self.action forControlEvents:UIControlEventTouchUpInside];
 
+
+  self.actionButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  self.statusBarOverlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
  self.backgroundColor = [UIColor colorWithHue:0.15 saturation:0.00 brightness:0.96 alpha:1.00];
  self.textColor = [UIColor blackColor];
@@ -47,9 +54,16 @@ static void statusbar_got_notification(CFNotificationCenterRef center, void *obs
  return self;
 }
 
+- (void)interfaceOrientationDidChange:(NSNotification *)notif
+{
+  self.statusBarOverlay.frame = [[[UIApplication sharedApplication] keyWindow] bounds];
+
+  self.actionButton.frame = [[[UIApplication sharedApplication] keyWindow] bounds];
+}
+
 - (void)showOverlayForSeconds:(float)seconds
 {
-
+  [self interfaceOrientationDidChange:nil];
   if (self.statusBarOverlay.isHidden)
     self.statusBarOverlay.hidden = NO;
 
