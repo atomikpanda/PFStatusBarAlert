@@ -49,6 +49,8 @@ static void statusbar_got_notification(CFNotificationCenterRef center, void *obs
 
  self.actionButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
  self.actionButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+ self.actionButton.alpha = 0.0f;
+
  if (self.target && self.action)
   [self.actionButton addTarget:self.target action:self.action forControlEvents:UIControlEventTouchUpInside];
 
